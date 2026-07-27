@@ -1,6 +1,6 @@
 # Better Court Bot
 
-Standalone Playwright project for Better court booking. No repo required. Folder is enough.
+Playwright project for Better court booking.
 
 First version keeps risk low:
 
@@ -9,15 +9,6 @@ First version keeps risk low:
 - `prepare`: open best matching slot page, stop before clicking
 - `basket`: click `Add to basket` for best matching slot
 - `watch`: poll until a matching slot becomes bookable, then open slot page
-
-## Why separate folder
-
-Playwright is normal Node project. It does not need its own Git repo. Separate folder is cleaner because it needs:
-
-- `package.json`
-- `node_modules`
-- browser profile directory
-- `.env` config
 
 ## Current Highbury finding
 
@@ -32,25 +23,47 @@ npx playwright install chromium
 cp .env.example .env
 ```
 
-## Basic use
+## Verify it works
 
-Probe public data first:
+First verify Chromium can launch. This does not open Better or use your login:
+
+```bash
+npm run browser-check
+```
+
+Success prints `Chromium ... launched successfully.`
+
+Then validate configuration, Better API access, slot parsing, and release-time detection. This does not open a browser or change a booking:
 
 ```bash
 npm run probe
 ```
 
-Open browser and log in manually:
+Working output has all of these:
+
+- `Activity` names Highbury Tennis and lists courts.
+- `Matching Slots` table contains courts within your date and time criteria.
+- `Best Candidate` either shows a bookable court or says `No bookable slot right now.`
+
+`No bookable slot right now.` is normal when matching courts are full or have not been released. It still proves the API and filtering work.
+
+Then test browser setup and Better login without selecting a court:
 
 ```bash
 npm run login
 ```
 
-Open best matching slot page without clicking:
+A Chromium window opens. Log into Better and close the browser when your account page loads. Next `npm run login` should retain the session; if it asks again, login persistence failed.
+
+When `probe` shows a bookable candidate, test navigation only:
 
 ```bash
 npm run prepare
 ```
+
+It should print selected court, open its Better slot page, and stop before adding it to basket. Do not use `basket` as first test because it changes Better basket.
+
+## Commands
 
 Try add-to-basket for best matching slot:
 
@@ -69,3 +82,4 @@ npm run watch
 - Browser session is reused from `PROFILE_DIR`, so saved Better login should persist.
 - Saved card may still trigger 3DS, CVV, or bank approval later. This version stops before payment.
 - If you change target courts or time window, edit `.env`.
+- `.env`, browser profile, and Vim swap files are ignored by Git and must never be committed.

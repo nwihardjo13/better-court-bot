@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "browser-check": "node src/browser-check.js",
     "probe": "node src/cli.js probe",
     "login": "node src/cli.js login",
     "prepare": "node src/cli.js prepare",

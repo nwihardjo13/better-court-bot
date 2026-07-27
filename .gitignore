@@ -1,4 +1,6 @@
 node_modules
 .env
+.env.swp
+.env.swo
 .playwright-profile
 artifacts
