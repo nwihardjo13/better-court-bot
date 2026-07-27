@@ -1,0 +1,16 @@
+{
+  "name": "better-court-bot",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "probe": "node src/cli.js probe",
+    "login": "node src/cli.js login",
+    "prepare": "node src/cli.js prepare",
+    "basket": "node src/cli.js basket",
+    "watch": "node src/cli.js watch"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "playwright": "^1.62.0"
+  }
+}
