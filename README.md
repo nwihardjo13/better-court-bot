@@ -1,6 +1,6 @@
 # Better Court Bot
 
-Playwright project for Better court booking.
+Browser automation project for Better court booking, built with [Playwright](https://playwright.dev/docs/intro).
 
 First version keeps risk low:
 
@@ -16,16 +16,27 @@ Live Better slot data for `highbury-tennis` currently shows `first_bookable_at` 
 
 ## Setup
 
+Clone the repository, then run every `npm` command from the cloned `better-court-bot` directory. That directory contains `package.json`.
+
 ```bash
-cd /home/nathan/src/better-court-bot
+git clone https://github.com/nwihardjo13/better-court-bot.git
+cd better-court-bot
 npm install
 npx playwright install chromium
 cp .env.example .env
 ```
 
+If you already cloned it, open a terminal in its directory before running commands:
+
+```bash
+cd better-court-bot
+```
+
+`npm run browser-check` will fail with `ENOENT ... package.json` if run from parent directory instead.
+
 ## Verify it works
 
-First verify Chromium can launch. This does not open Better or use your login:
+From the `better-court-bot` directory, first verify Chromium can launch. This does not open Better or use your login:
 
 ```bash
 npm run browser-check
