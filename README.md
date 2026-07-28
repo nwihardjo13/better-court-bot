@@ -9,6 +9,7 @@ First version keeps risk low:
 - `prepare`: open best matching slot page, stop before clicking
 - `basket`: click `Add to basket` for best matching slot
 - `watch`: poll until a matching slot becomes bookable, then open slot page
+- `watch-basket`: poll until a matching slot becomes bookable, then add it to basket
 
 ## Current Highbury finding
 
@@ -76,17 +77,37 @@ It should print selected court, open its Better slot page, and stop before addin
 
 ## Commands
 
-Try add-to-basket for best matching slot:
+Run every command from the cloned `better-court-bot` directory.
+
+| Command | What it does | Changes booking? |
+| --- | --- | --- |
+| `npm run browser-check` | Launches and closes Chromium. Checks Playwright setup. | No |
+| `npm run probe` | Shows matching courts, release time, and best available candidate. | No |
+| `npm run login` | Opens Better so you can log in. Keeps local browser session. | No |
+| `npm run prepare` | Opens best available slot page. | No |
+| `npm run basket` | Adds best available slot to Better basket now. | Yes |
+| `npm run watch` | Polls until matching slot is available, then opens its slot page. | No |
+| `npm run watch-basket` | Polls until matching slot is available, then adds it to Better basket. | Yes |
+
+For one command before release, log in once first with `npm run login`, then run:
 
 ```bash
-npm run basket
+npm run watch-basket
 ```
 
-Watch and jump when slot becomes bookable:
+It polls Better until a matching slot becomes available, opens that slot using saved browser session, and clicks `Add to basket`. It stops at basket. Payment remains manual because Better or bank may require CVV or 3DS approval.
 
-```bash
-npm run watch
+Selection order: preferred court order, then earliest date, then earliest time. Leave `PREFERRED_COURTS=` blank to accept any court.
+
+Use an inclusive rolling day range in `.env`:
+
+```env
+TARGET_DATES=
+TARGET_DAYS_AHEAD_FROM=5
+TARGET_DAYS_AHEAD_TO=7
 ```
+
+This checks every date from five through seven days ahead. `TARGET_DATES` overrides range when non-empty.
 
 ## Notes
 

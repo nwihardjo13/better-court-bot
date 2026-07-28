@@ -99,19 +99,28 @@ async function runBasket(config) {
 }
 
 async function runWatch(config) {
+  const best = await waitForBookableSlot(config);
+  await openMatchingSlotPage(best, config);
+}
+
+async function runWatchBasket(config) {
+  const best = await waitForBookableSlot(config);
+  await addMatchingSlotToBasket(best, config);
+}
+
+async function waitForBookableSlot(config) {
   printHeader("Watch");
   printConfig(config);
 
   for (;;) {
-    const { slots } = await gather(config);
+    const slots = await fetchSlots(config);
     const available = slots.filter((slot) => slotMatchesCriteria(slot, config) && isBookableNow(slot));
     const best = pickBestSlot(available, config);
 
     if (best) {
       console.log("Bookable slot found.");
       console.table([summarizeSlot(best, config)]);
-      await openMatchingSlotPage(best, config);
-      return;
+      return best;
     }
 
     const matching = slots.filter((slot) => slotMatchesCriteria(slot, config));
@@ -149,8 +158,11 @@ async function main() {
     case "watch":
       await runWatch(config);
       return;
+    case "watch-basket":
+      await runWatchBasket(config);
+      return;
     default:
-      throw new Error("Usage: node src/cli.js [probe|login|prepare|basket|watch]");
+      throw new Error("Usage: node src/cli.js [probe|login|prepare|basket|watch|watch-basket]");
   }
 }
 

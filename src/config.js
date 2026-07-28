@@ -71,6 +71,18 @@ function addDays(dateString, days) {
   return date.toISOString().slice(0, 10);
 }
 
+function buildDateRange(startDate, endDate) {
+  const dates = [];
+  let currentDate = startDate;
+
+  while (currentDate <= endDate) {
+    dates.push(currentDate);
+    currentDate = addDays(currentDate, 1);
+  }
+
+  return dates;
+}
+
 function buildTargetDates(timeZone) {
   const targetDates = readList("TARGET_DATES");
   if (targetDates.length > 0) {
@@ -78,8 +90,19 @@ function buildTargetDates(timeZone) {
   }
 
   const today = todayInTimeZone(timeZone);
-  const daysAhead = readNumber("TARGET_DAYS_AHEAD", 5);
-  return [addDays(today, daysAhead)];
+  const defaultDaysAhead = readNumber("TARGET_DAYS_AHEAD", 5);
+  const startDaysAhead = readNumber("TARGET_DAYS_AHEAD_FROM", defaultDaysAhead);
+  const endDaysAhead = readNumber("TARGET_DAYS_AHEAD_TO", startDaysAhead);
+
+  if (!Number.isInteger(startDaysAhead) || !Number.isInteger(endDaysAhead)) {
+    throw new Error("TARGET_DAYS_AHEAD_FROM and TARGET_DAYS_AHEAD_TO must be whole numbers.");
+  }
+
+  if (startDaysAhead < 0 || endDaysAhead < startDaysAhead) {
+    throw new Error("TARGET_DAYS_AHEAD range must be zero or greater and ordered from low to high.");
+  }
+
+  return buildDateRange(addDays(today, startDaysAhead), addDays(today, endDaysAhead));
 }
 
 export function loadConfig() {

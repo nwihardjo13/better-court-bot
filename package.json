@@ -8,7 +8,8 @@
     "login": "node src/cli.js login",
     "prepare": "node src/cli.js prepare",
     "basket": "node src/cli.js basket",
-    "watch": "node src/cli.js watch"
+    "watch": "node src/cli.js watch",
+    "watch-basket": "node src/cli.js watch-basket"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
